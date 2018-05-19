@@ -9,7 +9,7 @@ const PromptService = require('./promptService');
 
 /**
  * List service provides method to creating, adding and managing list.
- * 
+ *
  * @class ListService
  */
 class ListService {
@@ -29,26 +29,26 @@ class ListService {
         members: [],
       },
       list: [],
-    }
+    };
     this.itemNameRandom = [
       'Drink more water!',
       'Get back to coding',
       'Remember about the deadline...',
       'Buy eggs, rice and beer',
       'Write tests!',
-    ]
+    ];
     this.status = {
       0: 'TODO',
       1: 'IN PROGRESS',
       3: 'DONE',
-    }
+    };
     this.isListCreated = fs.existsSync(this.pathList);
   }
 
 
   /**
    * Create list method. If there is list, return alert.
-   * 
+   *
    * @memberof ListService
    */
   async create() {
@@ -61,14 +61,14 @@ class ListService {
     }
 
     const { value: name } = await PromptService.promptText({
-      message: `Name:`,
+      message: 'Name:',
       initial: `${this.skeleton.meta.name}`,
-    })
+    });
 
     const { value: description } = await PromptService.promptText({
-      message: `Description:`,
+      message: 'Description:',
       initial: `${this.skeleton.meta.description}`,
-    })
+    });
 
     newList.meta.name = name;
     newList.meta.description = description;
@@ -99,13 +99,13 @@ class ListService {
     }
 
     const { value: name } = await PromptService.promptText({
-      message: `Name:`,
+      message: 'Name:',
       initial: `${this.itemNameRandom[Math.floor(Math.random() * 5)]}`,
-    })
+    });
 
     const { value: timetable } = await PromptService.validatePrompt(
       () => PromptService.promptText({
-        message: `Timetable:`,
+        message: 'Timetable:',
         initial: 'null',
         format: (e) => {
           const date = Date.parse(e) ? Date.parse(e) : false;
@@ -116,26 +116,27 @@ class ListService {
         if (val === 'null') return true;
         return Date.parse(val) ? true : false;
       },
-      () => Logger(`The timetable entered is incorrect. Try to enter something else! (e.g. 'today at 16:00', 'tomorrow'...)`, 'red'),
-      10);
+      () => Logger("The timetable entered is incorrect. Try to enter something else! (e.g. 'today at 16:00', 'tomorrow'...)", 'red'),
+      10
+    );
 
     const { value: priority } = await PromptService.promptSelect({
-      message: `Priority:`,
+      message: 'Priority:',
       choices: [
-        { title: '-', value: '-', },
-        { title: '!', value: '!', },
-        { title: '!!', value: '!!', },
-        { title: '!!!', value: '!!!', },
+        { title: '-', value: '-' },
+        { title: '!', value: '!' },
+        { title: '!!', value: '!!' },
+        { title: '!!!', value: '!!!' },
       ],
       initial: 0,
-    })
+    });
 
-    const { list } = this.getList();   
+    const { list } = this.getList();
 
     if (this.isListCreated) {
-      fs.writeFileSync(this.pathList, JSON.stringify({
+      this.updateList({
         ...this.getList(),
-        list: [ ...list, {
+        list: [...list, {
           _id: this.getRandomString(),
           name,
           timetable,
@@ -145,11 +146,37 @@ class ListService {
           updatedAt: now,
           createdAt: now,
         }],
-      }, null, 2));
-      Logger(`Awesome! You've added .todos to the list!`, 'rainbow');
+      });
+      this.sortList(this.getList());
+      Logger("Awesome! You've added .todos to the list!", 'rainbow');
     } else {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
     }
+  }
+
+
+  sortList({ meta, list }) {
+    const sortedList = list
+      .sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
+      .sort((a, b) => {
+        if (a.priority !== b.priority) {
+          if (a.priority === '-') return 1;
+          if (b.priority === '-') return -1;
+          return (b.priority.length - a.priority.length);
+        }
+        return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+      });
+    this.updateList({
+      meta,
+      list: sortedList,
+    });
+  }
+
+
+  updateList(obj) {
+    const newObj = obj;
+    newObj.meta.updatedAt = new Date();
+    fs.writeFileSync(this.pathList, JSON.stringify(newObj, null, 2));
   }
 
 
@@ -164,7 +191,7 @@ class ListService {
       numeric: true,
       letters: true,
       special: false,
-    })
+    });
   }
 }
 

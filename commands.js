@@ -31,6 +31,7 @@ module.exports = [
       'ls',
       'l',
     ],
+    module: require('./modules/list'),
   },
   {
     name: 'ROUTE_ADD',

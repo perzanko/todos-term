@@ -17,12 +17,12 @@ ${separator}
     anim.start();
     setTimeout(() => {
       anim.stop();
-    }, 600)
+    }, 600);
     return;
   }
   console.log(chalk[color](`
 ${separator}
 > ${message}
 ${separator}
-`))
+`));
 }
