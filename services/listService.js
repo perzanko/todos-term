@@ -205,7 +205,7 @@ class ListService {
       ],
     });
     this.sortList();
-    Logger(`Awesome! You've changed status of your .todos from '${this.getItemById(listItem).status}' to '${status}'`, 'rainbow');
+    Logger(`Awesome! You've changed status of this .todos element to '${status}'`, 'rainbow');
   }
 
 
