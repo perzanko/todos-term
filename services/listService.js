@@ -1,5 +1,6 @@
 const fs = require('fs');
 const randomString = require('random-string');
+const chalk = require('chalk');
 require('datejs');
 
 const UserService = require('./userService');
@@ -40,7 +41,7 @@ class ListService {
     this.status = {
       0: 'TODO',
       1: 'IN PROGRESS',
-      3: 'DONE',
+      2: 'DONE',
     };
     this.isListCreated = fs.existsSync(this.pathList);
   }
@@ -147,7 +148,7 @@ class ListService {
           createdAt: now,
         }],
       });
-      this.sortList(this.getList());
+      this.sortList();
       Logger("Awesome! You've added .todos to the list!", 'rainbow');
     } else {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
@@ -155,7 +156,66 @@ class ListService {
   }
 
 
-  sortList({ meta, list }) {
+  /**
+   * Change item status.
+   * render prompt and save in json.
+   *
+   * @memberof ListService
+   */
+  async changeItemStatus() {
+    const now = new Date();
+    const { list } = this.getList();
+
+    if (!this.isListCreated) {
+      Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
+      return;
+    }
+    if (!list.length) {
+      Logger('Hmm, you must first add an element to the .todos list! (todos add)', 'red');
+      return;
+    }
+
+    const { value: listItem } = await PromptService.promptSelect({
+      message: 'Item to status change:',
+      choices: list.map((item, index) => ({
+        title: `${chalk.grey(index + 1 < 10 ? `${index + 1} ` : index + 1)}${chalk[this.gerColorStatus(item.status)](' • ')}${item.name}`,
+        value: item._id,
+      })),
+      initial: 0,
+    });
+
+    const { value: status } = await PromptService.promptSelect({
+      message: 'Item to status change:',
+      choices: [1, 2, 3].map((item, index) => ({
+        title: chalk[this.gerColorStatus(this.status[index])]('• ') + this.status[index],
+        value: this.status[index],
+      })),
+      initial: 0,
+    });
+
+    this.updateList({
+      ...this.getList(),
+      list: [
+        ...this.getListAfterRemovingItem(listItem),
+        {
+          ...this.getItemById(listItem),
+          status,
+          updatedAt: now,
+        },
+      ],
+    });
+    this.sortList();
+    Logger(`Awesome! You've changed status of your .todos from '${this.getItemById(listItem).status}' to '${status}'`, 'rainbow');
+  }
+
+
+  /**
+   * Sort json list by date and priority
+   *
+   * @param {object} [{ meta, list }=this.getList()]
+   * @memberof ListService
+   */
+  sortList({ meta, list } = this.getList()) {
     const sortedList = list
       .sort((a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime())
       .sort((a, b) => {
@@ -173,18 +233,76 @@ class ListService {
   }
 
 
+  /**
+   * Update list and save as json .todos
+   *
+   * @param {object} obj
+   * @memberof ListService
+   */
   updateList(obj) {
     const newObj = obj;
     newObj.meta.updatedAt = new Date();
     fs.writeFileSync(this.pathList, JSON.stringify(newObj, null, 2));
+    this.memoizeList = newObj;
   }
 
 
+  /**
+   * Get list using memoize mechanism.
+   *
+   * @returns {object}
+   * @memberof ListService
+   */
   getList() {
-    return JSON.parse(fs.readFileSync(this.pathList));
+    let list = null;
+    if (this.memoizeList) {
+      list = { ...this.memoizeList };
+    } else {
+      list = JSON.parse(fs.readFileSync(this.pathList));
+    }
+    this.memoizeList = list;
+    return list;
   }
 
 
+  /**
+   * Get element by given id.
+   *
+   * @param {string} id
+   * @returns {object/null}
+   * @memberof ListService
+   */
+  getItemById(id) {
+    const { list } = this.getList();
+    return list.find((item) => item._id === id);
+  }
+
+
+  /**
+   * Get list object and remove item from the list.
+   *
+   * @param {string} id
+   * @returns {array}
+   * @memberof ListService
+   */
+  getListAfterRemovingItem(id) {
+    const { list } = this.getList();
+    let index = '';
+    list.forEach((item, i) => {
+      if (item._id === id) {
+        index = i;
+      }
+    });
+    return list.filter((item, ind) => ind !== index);
+  }
+
+
+  /**
+   * generate random string
+   *
+   * @returns {string}
+   * @memberof ListService
+   */
   getRandomString() {
     return randomString({
       length: 30,
@@ -192,6 +310,22 @@ class ListService {
       letters: true,
       special: false,
     });
+  }
+
+
+  /**
+   * Helper method to status colors.
+   *
+   * @param {string} status
+   * @returns {string}
+   * @memberof ListService
+   */
+  gerColorStatus(status) {
+    const statusColors = {};
+    statusColors[this.status[2]] = 'green';
+    statusColors[this.status[1]] = 'yellow';
+    statusColors[this.status[0]] = 'red';
+    return status ? statusColors[status] : 'grey';
   }
 }
 

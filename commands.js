@@ -5,7 +5,6 @@ module.exports = [
     description: 'Cras mattis consectetur purus sit amet fermentum.',
     commands: [
       'start',
-      'st',
       '',
     ],
     module: require('./modules/start'),
@@ -56,14 +55,16 @@ module.exports = [
     ],
   },
   {
-    name: 'ROUTE_CHECK',
-    namespace: 'CHECK',
-    description: 'Cras mattis consectetur purus sit amet fermentum.',
+    name: 'ROUTE_STATUS',
+    namespace: 'STATUS',
+    description: 'Change status of .todos single item',
     commands: [
-      'check',
-      'ch',
-      'c',
+      'status',
+      'stat',
+      'st',
+      's',
     ],
+    module: require('./modules/status'),
   },
   {
     name: 'ROUTE_EDIT',

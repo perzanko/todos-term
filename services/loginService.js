@@ -1,8 +1,7 @@
 const PromptService = require('./promptService');
 
 /**
- * 
- * 
+ *
  * @class LoginService
  */
 class LoginService {
@@ -17,7 +16,7 @@ class LoginService {
 
   /**
    * Login
-   * 
+   *
    * @async
    * @memberof LoginService
    */
