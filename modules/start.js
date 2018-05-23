@@ -4,7 +4,7 @@ class Start {
   }
 
   init(a, b) {
-    console.log(a, b);
+    // console.log(a, b);
   }
 }
 

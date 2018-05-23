@@ -29,12 +29,12 @@ class Status {
    */
   async render() {
     const now = new Date();
-    const { list } = ListService.getList();
 
     if (!ListService.isListCreated()) {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
       return;
     }
+    const { list } = ListService.getList();
     if (!list.length) {
       Logger('Hmm, you must first add an element to the .todos list! (todos add)', 'red');
       return;

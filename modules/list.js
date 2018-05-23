@@ -17,11 +17,6 @@ class List {
    */
   constructor(isGlobal) {
     ListService.setGlobal(isGlobal);
-    this.list = ListService.getList().list;
-    if (!this.list.length) Logger(".todos is empty. Add todo using command 'todos create'", 'blue');
-    this.table = new Table({
-      head: ['ID', 'Name', 'Timetable', 'Priority'].map((item) => chalk.blue.bold(item)),
-    });
     this.render();
   }
 
@@ -32,6 +27,18 @@ class List {
    * @memberof List
    */
   render() {
+    if (!ListService.isListCreated()) {
+      Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
+      return;
+    }
+    this.list = ListService.getList().list;
+    if (!this.list.length) {
+      Logger(".todos is empty. Add todo using command 'todos create'", 'blue');
+      return;
+    }
+    this.table = new Table({
+      head: ['ID', 'Name', 'Timetable', 'Priority'].map((item) => chalk.blue.bold(item)),
+    });
     this.list.forEach((item, index) => {
       this.table.push([
         chalk.grey.bold(index + 1),

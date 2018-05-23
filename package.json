@@ -1,7 +1,7 @@
 {
   "name": "todos-term",
   "version": "1.0.0",
-  "description": "Fancy todo list for dev teams.",
+  "description": ".todos is the simple todo list for your dev team built on top of NodeJS Platform.",
   "main": "index.js",
   "author": {
     "name": "Kacper Perzankowski",

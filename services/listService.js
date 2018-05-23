@@ -19,10 +19,9 @@ class ListService {
    * @memberof ListService
    */
   constructor() {
-    this.pathList = './.todos';
-    this.globalPathList = os.homedir() + '/.todos';
+    this.pathList = `${process.cwd()}/.todos`;
+    this.globalPathList = `${os.homedir()}/.todos`;
     this.global = false;
-    console.log(os.homedir(), this.globalPathList);
     this.skeleton = {
       meta: {
         name: 'My awesome .todos',
