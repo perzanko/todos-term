@@ -35,7 +35,7 @@ class List {
       this.table.push([
         chalk.grey.bold(index + 1),
         chalk[this.gerColorStatus(item.status)](' •   ') + chalk.bold(item.name || '-'),
-        item.timetable && item.timetable !== 'null' ? (moment(item.timetable).calendar() || '-') : '-',
+        item.timetable && item.timetable !== 'null' ? (this.getCalendarDate(item.timetable) || '-') : '-',
         chalk.bold(item.priority || '-'),
       ]);
       // TODO: meta
@@ -69,6 +69,23 @@ class List {
       'IN PROGRESS': 'yellow',
     };
     return statusColors[status];
+  }
+
+
+  /**
+   * Parse calendar day.
+   * Red color when timetable is outdated.
+   *
+   * @param {number} timetable
+   * @returns {string}
+   * @memberof List
+   */
+  getCalendarDate(timetable) {
+    const calendarText = moment(timetable).calendar();
+    if (moment().diff(moment(timetable)) >= 0) {
+      return chalk.red(calendarText);
+    }
+    return calendarText;
   }
 }
 
