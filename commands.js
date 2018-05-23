@@ -96,7 +96,10 @@ module.exports = [
     description: 'Cras mattis consectetur purus sit amet fermentum.',
     commands: [
       'help',
+      'hulp',
       'h',
+      '-h',
     ],
+    module: require('./modules/help'),
   },
 ];
