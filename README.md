@@ -1,3 +1,3 @@
 #### todos-term
 
-![.todos](logo.svg?raw=true)
+![.todos](logo.png?raw=true)
