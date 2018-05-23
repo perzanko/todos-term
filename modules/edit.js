@@ -1,12 +1,13 @@
 require('datejs');
+const chalk = require('chalk');
+const moment = require('moment');
 
 const ListService = require('./../services/listService');
 const Logger = require('./../services/loggerService');
 const PromptService = require('./../services/promptService');
-const UserService = require('./../services/userService');
 
 
-class Add {
+class Edit {
   constructor() {
     this.render();
   }
@@ -18,15 +19,30 @@ class Add {
       return;
     }
 
-    const { value: name } = await PromptService.promptText({
-      message: 'Name:',
-      initial: `${ListService.itemNameRandom[Math.floor(Math.random() * 5)]}`,
+    if (!ListService.getList().list.length) {
+      Logger('Hmm, you your .todos list is empty!', 'red');
+      return;
+    }
+
+    const { value: idItemToEdit } = await PromptService.promptSelect({
+      message: 'Choose an item:',
+      choices: ListService.getList().list.map((item, index) => ({
+        title: `${chalk.grey(index + 1 < 10 ? `${index + 1} ` : index + 1)}${chalk[ListService.gerColorStatus(item.status)](' • ')}${item.name}`,
+        value: item._id,
+      })),
+      initial: 0,
     });
 
-    const { value: timetable } = await PromptService.validatePrompt(
+    const itemToEdit = ListService.getItemById(idItemToEdit);
+
+    const { value: newName } = await PromptService.promptText({
+      message: 'Name:',
+      initial: itemToEdit.name,
+    });
+    const { value: newTimetable } = await PromptService.validatePrompt(
       () => PromptService.promptText({
         message: 'Timetable:',
-        initial: 'null',
+        initial: itemToEdit.timetable !== 'null' ? moment(itemToEdit.timetable).calendar() : 'null',
         format: (e) => {
           const date = Date.parse(e) ? Date.parse(e) : false;
           return e === null || e === 'null' ? 'null' : date;
@@ -39,8 +55,7 @@ class Add {
       () => Logger("The timetable entered is incorrect. Try to enter something else! (e.g. 'today at 16:00', 'tomorrow'...)", 'red'),
       10
     );
-
-    const { value: priority } = await PromptService.promptSelect({
+    const { value: newPriority } = await PromptService.promptSelect({
       message: 'Priority:',
       choices: [
         { title: '-', value: '-' },
@@ -48,27 +63,22 @@ class Add {
         { title: '!!', value: '!!' },
         { title: '!!!', value: '!!!' },
       ],
-      initial: 0,
+      initial: ListService.getIndexOfPriorityList(itemToEdit.priority),
     });
-
-    const { list } = ListService.getList();
 
     if (ListService.isListCreated) {
       ListService.updateList({
         ...ListService.getList(),
-        list: [...list, {
-          _id: ListService.getRandomString(),
-          name,
-          timetable,
-          priority,
-          status: ListService.status[0],
-          author: UserService.username,
+        list: [...ListService.getListAfterRemovingItem(itemToEdit._id), {
+          ...itemToEdit,
+          name: newName,
+          timetable: newTimetable,
+          priority: newPriority,
           updatedAt: now,
-          createdAt: now,
         }],
       });
       ListService.sortList();
-      Logger("Awesome! You've added .todos to the list!", 'rainbow');
+      Logger("Awesome! You've edited .todos item!", 'rainbow');
     } else {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
     }
@@ -76,4 +86,4 @@ class Add {
 }
 
 
-module.exports = Add;
+module.exports = Edit;

@@ -7,7 +7,7 @@ module.exports = [
       'start',
       '',
     ],
-    module: require('./modules/start'),
+    module: require('./modules/list'),
   },
   {
     name: 'ROUTE_CREATE',
@@ -75,6 +75,7 @@ module.exports = [
       'ed',
       'e',
     ],
+    module: require('./modules/edit'),
   },
   {
     name: 'ROUTE_HELP',
