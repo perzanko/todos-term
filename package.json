@@ -1,6 +1,6 @@
 {
   "name": "todos-term",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": ".todos is the simple todo list for your dev team built on top of NodeJS Platform.",
   "main": "index.js",
   "author": {
