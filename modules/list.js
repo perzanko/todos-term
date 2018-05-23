@@ -33,7 +33,7 @@ class List {
     }
     this.list = ListService.getList().list;
     if (!this.list.length) {
-      Logger(".todos is empty. Add todo using command 'todos create'", 'blue');
+      Logger(".todos is empty. Add todo using command 'todos add'", 'blue');
       return;
     }
     this.table = new Table({
