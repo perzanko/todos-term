@@ -3,26 +3,26 @@
 todos-term
 =========
 
-** Probably the best way to keep your mind clean and well organized. **
+**Probably the best way to keep your mind clean and well organized.**
 
-** .todos ** is simple task manager directed to developers teams. Super fast and easy to use. Well structured JSON stored in the root of every project.
+**.todos** is simple task manager directed to developers teams. It's super fast and easy to use. Well structured JSON makes .todos list easy to import/export and share between projects.
 
 ## Getting Started
 
-1. First install it by npm/yarn
+1. First install `.todos` using npm or yarn
 
 ```
 npm i -g todos-term
 ```
 
-2. Then go to the project folder and create .todos
+2. Then go to the project folder and create `.todos`
 
 ```
 cd my-project-folder
 todos create
 ```
 
-3. Now you can add your first todo
+3. Now you can add your first `.todos item`
 
 ```
 todos add
@@ -31,7 +31,6 @@ todos add
 ## Usage
 
 ```go
-> HELP
 CREATE       [create, crt, cr] - Create your own .todos list and keep it locally in your directory.
 LIST         [list, lst, ls, l] - Display table with .todos.
 ADD          [add, ad, a] - Add .todos item to the list.
@@ -43,3 +42,4 @@ HELP         [help, h, -h] - Show help tips.
 GLOBAL       [...-g] - You can manage your own .todos global as well.
 ```
 
+## In progress...
