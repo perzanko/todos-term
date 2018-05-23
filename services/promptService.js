@@ -1,9 +1,8 @@
-const repeat = require('repeat-string');
 const prompts = require('prompts');
 
 /**
  * Prompt service
- * 
+ *
  * @class promptService
  */
 class PromptService {
