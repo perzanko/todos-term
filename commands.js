@@ -79,6 +79,18 @@ module.exports = [
     module: require('./modules/edit'),
   },
   {
+    name: 'ROUTE_CLEAR',
+    namespace: 'CLEAR',
+    description: 'Cras mattis consectetur purus sit amet fermentum.',
+    commands: [
+      'clear',
+      'clr',
+      'cl',
+      'c',
+    ],
+    module: require('./modules/clear'),
+  },
+  {
     name: 'ROUTE_HELP',
     namespace: 'HELP',
     description: 'Cras mattis consectetur purus sit amet fermentum.',
