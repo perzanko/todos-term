@@ -37,7 +37,18 @@ class PromptService {
       ...options,
     }, {
       onCancel: () => process.exit(),
-    })
+    });
+  }
+
+
+  static promptToggle(options) {
+    return prompts({
+      type: 'toggle',
+      name: 'value',
+      ...options,
+    }, {
+      onCancel: () => process.exit(),
+    });
   }
 
 

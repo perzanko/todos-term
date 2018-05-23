@@ -53,6 +53,7 @@ module.exports = [
       'rm',
       'r',
     ],
+    module: require('./modules/remove'),
   },
   {
     name: 'ROUTE_STATUS',
