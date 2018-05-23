@@ -27,3 +27,19 @@ todos create
 ```
 todos add
 ```
+
+## Usage
+
+```go
+> HELP
+CREATE       [create, crt, cr] - Create your own .todos list and keep it locally in your directory.
+LIST         [list, lst, ls, l] - Display table with .todos.
+ADD          [add, ad, a] - Add .todos item to the list.
+REMOVE       [remove, rem, rm, r] - Remove .todos item from the list.
+STATUS       [status, stat, st, s] - Change status of .todos single item.
+EDIT         [edit, ed, e] - Edit single .todos item.
+CLEAR        [clear, clr, cl, c] - Clear all .todos items with status 'DONE'.
+HELP         [help, h, -h] - Show help tips.
+GLOBAL       [...-g] - You can manage your own .todos global as well.
+```
+
