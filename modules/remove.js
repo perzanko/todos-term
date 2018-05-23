@@ -8,13 +8,14 @@ const PromptService = require('./../services/promptService');
 
 
 class Remove {
-  constructor() {
+  constructor(isGlobal) {
+    ListService.setGlobal(isGlobal);
     this.render();
   }
 
   async render() {
     const now = new Date();
-    if (!ListService.isListCreated) {
+    if (!ListService.isListCreated()) {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
       return;
     }

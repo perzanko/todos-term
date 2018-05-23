@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const randomString = require('random-string');
 const chalk = require('chalk');
 const moment = require('moment');
@@ -19,6 +20,9 @@ class ListService {
    */
   constructor() {
     this.pathList = './.todos';
+    this.globalPathList = os.homedir() + '/.todos';
+    this.global = false;
+    console.log(os.homedir(), this.globalPathList);
     this.skeleton = {
       meta: {
         name: 'My awesome .todos',
@@ -42,7 +46,12 @@ class ListService {
       1: 'IN PROGRESS',
       2: 'DONE',
     };
-    this.isListCreated = fs.existsSync(this.pathList);
+    this.isListCreated = () => fs.existsSync(this.global ? this.globalPathList : this.pathList);
+  }
+
+
+  setGlobal(state) {
+    this.global = state;
   }
 
 
@@ -79,7 +88,7 @@ class ListService {
   updateList(obj) {
     const newObj = obj;
     newObj.meta.updatedAt = new Date();
-    fs.writeFileSync(this.pathList, JSON.stringify(newObj, null, 2));
+    fs.writeFileSync(this.global ? this.globalPathList : this.pathList, JSON.stringify(newObj, null, 2));
     this.memoizeList = newObj;
   }
 
@@ -95,7 +104,7 @@ class ListService {
     if (this.memoizeList) {
       list = { ...this.memoizeList };
     } else {
-      list = JSON.parse(fs.readFileSync(this.pathList));
+      list = JSON.parse(fs.readFileSync(this.global ? this.globalPathList : this.pathList));
     }
     this.memoizeList = list;
     return list;

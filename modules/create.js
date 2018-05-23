@@ -8,15 +8,16 @@ const PromptService = require('./../services/promptService');
 
 
 class Create {
-  constructor() {
-    this.render();
+  constructor(isGlobal) {
+    ListService.setGlobal(isGlobal);
+    this.render(isGlobal);
   }
 
-  async render() {
+  async render(isGlobal) {
     const now = new Date();
     const newList = { ...ListService.skeleton };
 
-    if (ListService.isListCreated) {
+    if (ListService.isListCreated()) {
       Logger('HOHO! .todos list already exists! You cannot create list twice!', 'red');
       return;
     }
@@ -38,8 +39,8 @@ class Create {
     newList.meta.updatedAt = now;
     newList.meta.members.push(UserService.username);
 
-    if (!ListService.isListCreated) {
-      fs.writeFileSync(ListService.pathList, JSON.stringify(newList, null, 2));
+    if (!ListService.isListCreated()) {
+      fs.writeFileSync(isGlobal ? ListService.globalPathList : ListService.pathList, JSON.stringify(newList, null, 2));
       Logger('Great! You have created .todos list! Now, you can add your first todo!', 'rainbow');
     } else {
       Logger('HOHO! .todos list already exists! You cannot create list twice!', 'red');

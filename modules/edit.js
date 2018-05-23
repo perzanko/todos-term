@@ -8,13 +8,14 @@ const PromptService = require('./../services/promptService');
 
 
 class Edit {
-  constructor() {
+  constructor(isGlobal) {
+    ListService.setGlobal(isGlobal);
     this.render();
   }
 
   async render() {
     const now = new Date();
-    if (!ListService.isListCreated) {
+    if (!ListService.isListCreated()) {
       Logger('Ohh, you should create your .todos list first! (todos create)', 'red');
       return;
     }
@@ -66,7 +67,7 @@ class Edit {
       initial: ListService.getIndexOfPriorityList(itemToEdit.priority),
     });
 
-    if (ListService.isListCreated) {
+    if (ListService.isListCreated()) {
       ListService.updateList({
         ...ListService.getList(),
         list: [...ListService.getListAfterRemovingItem(itemToEdit._id), {

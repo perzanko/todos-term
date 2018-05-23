@@ -15,7 +15,8 @@ class List {
    * Creates an instance of List.
    * @memberof List
    */
-  constructor() {
+  constructor(isGlobal) {
+    ListService.setGlobal(isGlobal);
     this.list = ListService.getList().list;
     if (!this.list.length) Logger(".todos is empty. Add todo using command 'todos create'", 'blue');
     this.table = new Table({

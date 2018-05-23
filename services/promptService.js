@@ -19,7 +19,7 @@ class PromptService {
       ...args,
     }, {
       onCancel: () => process.exit(),
-    })
+    });
   }
 
 
@@ -53,7 +53,7 @@ class PromptService {
 
   /**
    * Handle password input
-   * 
+   *
    * @static
    * @memberof promptService
    */
@@ -65,7 +65,7 @@ class PromptService {
       ...options,
     }, {
       onCancel: () => process.exit(),
-    })
+    });
   }
 
   static validatePrompt(
