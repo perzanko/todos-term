@@ -30,7 +30,7 @@ todos add
 
 ## Usage
 
-```go
+```ruby
 CREATE       [create, crt, cr] - Create your own .todos list and keep it locally in your directory.
 LIST         [list, lst, ls, l] - Display table with .todos.
 ADD          [add, ad, a] - Add .todos item to the list.
